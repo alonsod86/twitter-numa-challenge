@@ -1,3 +1,5 @@
+package numa.core;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -10,8 +12,7 @@ public class Producer {
     private KafkaProducer<Integer, String> producer = null;
     private Properties props = new Properties();
 
-    public Producer(String bootstrap)
-    {
+    public Producer(String bootstrap) {
         props.put("bootstrap.servers", bootstrap);
         props.put("retries", 0);
         props.put("batch.size", 16384);

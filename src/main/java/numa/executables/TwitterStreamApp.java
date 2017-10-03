@@ -1,9 +1,13 @@
+package numa.executables;
+
+import com.google.gson.Gson;
+import numa.core.Producer;
 import twitter4j.*;
 
 /**
  * Created by alonso on 2/10/17.
  */
-public class TwitterSample {
+public class TwitterStreamApp {
 
     private static Producer producer = new Producer("kafka:9092");
 
@@ -14,6 +18,7 @@ public class TwitterSample {
      * @throws TwitterException when Twitter service or network is unavailable
      */
     public static void main(String[] args) throws TwitterException {
+        Gson gson = new Gson();
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
         StatusListener listener = new StatusListener() {
 
@@ -24,7 +29,16 @@ public class TwitterSample {
             @Override
             public void onStatus(Status status) {
                 System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
-                producer.send(status.getLang()==null?"undefined":status.getLang(), status.getText().toString());
+                // Users splitter
+                producer.send("users", gson.toJson(status.getUser()));
+                // Tweets splitter
+                producer.send("tweets", gson.toJson(status));
+                // Geolocation splitter + enrichment for elastic
+                if (status.getGeoLocation()!=null)
+                    producer.send("geo", "{\"coordinates\": {" +
+                            "\"lat\":"+status.getGeoLocation().getLatitude()+
+                            ",\"lon\":"+status.getGeoLocation().getLongitude()+"}" +
+                            "}");
             }
 
             /**
