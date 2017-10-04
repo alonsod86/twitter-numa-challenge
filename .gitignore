@@ -1,0 +1,42 @@
+md-to-toc.py*
+__pycache__/
+package
+
+# maven
+target/
+
+# idea
+*.i??
+.idea/
+out/
+
+# eclipse
+.classpath
+.project
+.settings/
+kafka-*/bin/
+
+# gradle
+.gradle
+build/
+
+# log
+*.log
+dcos-kafka-service.log.*
+
+# vim swap files
+*.swp
+
+# OS X
+.DS_Store
+
+# created by build scripts (see build.sh/build-docker.sh)
+#/Dockerfile
+/dcos-commons-tools/
+
+# test
+integration/.cache/
+.cache/
+integration/env/
+
+testsAT/*.iml
